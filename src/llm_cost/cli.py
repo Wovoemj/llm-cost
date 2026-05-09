@@ -13,7 +13,7 @@ from rich import box
 
 from . import __version__
 from .cost import estimate_cost, compare_models, estimate_file_cost
-from .pricing import get_model, list_models, MODELS, ALIASES
+from .pricing import get_model, list_models, list_providers, MODELS, ALIASES
 from .tokens import count_tokens
 
 console = Console()
@@ -148,11 +148,13 @@ def compare(text, models, filepath, stdin, ratio, system, as_json, top):
     else:
         model_list = [
             "gpt-4o", "gpt-4o-mini", "gpt-4.1", "gpt-4.1-mini",
-            "claude-sonnet-4", "claude-3.5-haiku",
+            "gpt-5.4", "gpt-5.4-mini",
+            "claude-sonnet-4.6", "claude-haiku-4.5",
             "gemini-2.5-pro", "gemini-2.5-flash",
-            "deepseek-v3", "deepseek-r1",
-            "mistral-large", "mistral-small",
-            "grok-3", "grok-3-mini",
+            "deepseek-v4-pro", "deepseek-v4-flash",
+            "mistral-large-3", "mistral-small-3.2",
+            "grok-4.3", "grok-4.1-fast",
+            "qwen-max", "qwen-plus",
         ]
 
     results = compare_models(input_text, model_list, ratio, system_prompt=system)
@@ -326,6 +328,34 @@ def aliases():
 
     for alias, model in sorted(ALIASES.items()):
         table.add_row(alias, "→", model)
+
+    console.print()
+    console.print(table)
+    console.print()
+
+
+@cli.command()
+def providers():
+    """List all supported providers."""
+    from .pricing import MODELS as all_models
+    provider_counts: dict[str, int] = {}
+    for m in all_models.values():
+        provider_counts[m.provider] = provider_counts.get(m.provider, 0) + 1
+
+    table = Table(
+        title="🏢 Supported Providers",
+        box=box.ROUNDED,
+        border_style="bright_blue",
+    )
+    table.add_column("#", style="dim", width=3)
+    table.add_column("Provider", style="bold")
+    table.add_column("Models", justify="right")
+
+    for i, (name, count) in enumerate(sorted(provider_counts.items()), 1):
+        table.add_row(str(i), name, str(count))
+
+    table.add_row("", "─", "─")
+    table.add_row("", "[bold]Total[/]", f"[bold]{sum(provider_counts.values())}[/]")
 
     console.print()
     console.print(table)
