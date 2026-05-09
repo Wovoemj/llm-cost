@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "llm-cost"
+version = "0.1.0"
+description = "CLI tool to estimate LLM API costs before you spend a dime"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+authors = [{ name = "llm-cost contributors" }]
+keywords = ["llm", "cost", "openai", "anthropic", "token", "pricing"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Utilities",
+]
+
+dependencies = [
+    "click>=8.0",
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+tokenizers = ["tiktoken>=0.7"]
+dev = ["pytest>=7.0", "pytest-cov"]
+
+[project.scripts]
+llm-cost = "llm_cost.cli:cli"
+
+[project.urls]
+Homepage = "https://github.com/user/llm-cost"
+Issues = "https://github.com/user/llm-cost/issues"
