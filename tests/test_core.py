@@ -14,7 +14,7 @@ class TestPricing:
 
     def test_get_model_alias(self):
         m = get_model("claude-sonnet")
-        assert m.name == "claude-sonnet-4"
+        assert m.name == "claude-sonnet-4.6"
 
     def test_get_model_case_insensitive(self):
         m = get_model("GPT-4O")
@@ -29,7 +29,7 @@ class TestPricing:
 
     def test_list_models_all(self):
         models = list_models()
-        assert len(models) >= 25
+        assert len(models) >= 70
 
     def test_list_models_by_provider(self):
         models = list_models("Anthropic")
@@ -71,7 +71,7 @@ class TestCost:
         assert r2.total_cost < r1.total_cost
 
     def test_compare_models(self):
-        results = compare_models("Hello", ["gpt-4o", "gpt-4o-mini", "claude-sonnet-4"])
+        results = compare_models("Hello", ["gpt-4o", "gpt-4o-mini", "claude-sonnet-4.6"])
         assert len(results) == 3
         # Should be sorted by cost
         assert results[0].total_cost <= results[-1].total_cost
